@@ -414,12 +414,6 @@ class DirectoryDataset:
                     )
                 )
 
-    def load_image_consistent(path):
-        image = Image.open(path)
-        # Apply EXIF orientation
-        image = ImageOps.exif_transpose(image)
-        return image
-
     def _set_defaults(self, directory_config, dataset_config):
         directory_config.setdefault('enable_ar_bucket', dataset_config.get('enable_ar_bucket', False))
         directory_config.setdefault('shuffle_tags', dataset_config.get('shuffle_tags', False))
@@ -476,7 +470,7 @@ class DirectoryDataset:
                     assert self.framerate is not None, "Need model framerate but don't have it. This shouldn't happen. Is the framerate attribute on the model set?"
                     frames = int(self.framerate * meta['duration'])
                 else:
-                    pil_img = load_image_consistent(image_file)
+                    pil_img = Image.open(image_file)
                     width, height = pil_img.size
                     frames = 1
             except Exception:
